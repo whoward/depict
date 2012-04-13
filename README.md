@@ -99,12 +99,70 @@ Back to the DSL - you'll be able to specify your own custom serializers, so the 
       
       # UNIX timestamp representations for javascript friendly presentations
       define_presentation :javascript do
-         maps :created_at, :serializes_with => lambda { Time.now.to_i * 1000 }
+         maps :created_at, :serializes_with => lambda { |x| x.utc.to_i * 1000 }
       end
       
       # ISO 8601 formatted timestamps for XML friendly presentations
       define_presentation :xml do
-         maps :created_at, :serializes_with => lambda { Time.now.strftime('%Y-%m-%dT%H:%M:%S%z') }
+         maps :created_at, :serializes_with => lambda { |x| x.strftime('%Y-%m-%dT%H:%M:%S%z') }
+      end
+   end
+
+```
+
+Which has deserializer counterparts as well
+
+```ruby
+   class User
+      include Guise
+      
+      # UNIX timestamp representations for javascript friendly presentations
+      define_presentation :javascript do
+         maps :created_at, :serializes_with => lambda { |x| x.utc.to_i * 1000 },
+                           :deserializes_with => lambda { |x| Time.at((x / 1000).to_i).utc }
+      end
+      
+      # ISO 8601 formatted timestamps for XML friendly presentations
+      define_presentation :xml do
+         maps :created_at, :serializes_with => lambda { |x| x.strftime('%Y-%m-%dT%H:%M:%S%z') },
+                           :deserializes_with => lambda { |x| Date.iso8601(x) }
+      end
+   end
+
+```
+
+Both of which will be able to be DRYed up with a serializer/deserializer class of some kind
+
+```ruby
+   class UnixTimestampConverter < Guise::Converter
+      def serialize(value)
+         value.utc.to_i * 1000
+      end
+      def deserialize(value)
+         Time.at((value / 1000).to_i).utc
+      end
+   end
+   
+   class IsoTimestampConverter < Guise::Converter
+      def serialize(value)
+         value.strftime('%Y-%m%dT%H:%M:%S%z')
+      end
+      def deserialize(value)
+         Date.iso8601(value)
+      end
+   end
+
+   class User
+      include Guise
+      
+      # UNIX timestamp representations for javascript friendly presentations
+      define_presentation :javascript do
+         maps :created_at, :converter => UnixTimestampConverter
+      end
+      
+      # ISO 8601 formatted timestamps for XML friendly presentations
+      define_presentation :xml do
+         maps :created_at, :converter => IsoTimestampConverter
       end
    end
 
