@@ -1,0 +1,3 @@
+# Description
+
+Guise will be a presentation library for Ruby which will let you define multiple presentations for any Ruby class using a (hopefully) pleasant DSL.  It also includes the vital missing component from other presentation libraries which will be instantiating a new instance of a class from a presentation you specify - a common use case for this would be, for example, having multiple presentations of an object to support aging versions of a Web API.
