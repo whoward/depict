@@ -91,6 +91,25 @@ And will inherently give you some help with against mass assignment protection
   => "admin"
 ```
 
+Back to the DSL - you'll be able to specify your own custom serializers, so the mapped value is more appropriate
+
+```ruby
+   class User
+      include Guise
+      
+      # UNIX timestamp representations for javascript friendly presentations
+      define_presentation :javascript do
+         maps :created_at, :serializes_with => lambda { Time.now.to_i * 1000 }
+      end
+      
+      # ISO 8601 formatted timestamps for XML friendly presentations
+      define_presentation :xml do
+         maps :created_at, :serializes_with => lambda { Time.now.strftime('%Y-%m-%dT%H:%M:%S%z') }
+      end
+   end
+
+```
+
 # So - what do you think?
 
 I'll probably be starting to implement this shortly, I would love some feedback before I get started, 
