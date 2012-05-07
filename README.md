@@ -168,6 +168,28 @@ Both of which will be able to be DRYed up with a serializer/deserializer class o
 
 ```
 
+Internally all of this syntactic sugar is managed by the ``Guise::Presenter`` class which can be used without
+associating it directly with any model:
+
+```ruby
+
+   UserPresenter = Guise::Presenter.define do
+      maps :id
+      maps :name
+      maps :role
+   end
+
+```
+
+Which can be used for duck-typing and to promote DRYness:
+
+```ruby
+
+   UserPresenter.new(User.first).to_h
+   UserPresenter.new(Customer.first).to_h
+
+```
+
 # So - what do you think?
 
 I'll probably be starting to implement this shortly, I would love some feedback before I get started, 
