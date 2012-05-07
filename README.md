@@ -134,7 +134,7 @@ Which has deserializer counterparts as well
 Both of which will be able to be DRYed up with a serializer/deserializer class of some kind
 
 ```ruby
-   class UnixTimestampConverter < Guise::Converter
+   class UnixTimestampConverter
       def serialize(value)
          value.utc.to_i * 1000
       end
@@ -143,7 +143,7 @@ Both of which will be able to be DRYed up with a serializer/deserializer class o
       end
    end
    
-   class IsoTimestampConverter < Guise::Converter
+   class IsoTimestampConverter
       def serialize(value)
          value.strftime('%Y-%m%dT%H:%M:%S%z')
       end
@@ -157,12 +157,12 @@ Both of which will be able to be DRYed up with a serializer/deserializer class o
       
       # UNIX timestamp representations for javascript friendly presentations
       define_presentation :javascript do
-         maps :created_at, :converter => UnixTimestampConverter
+         maps :created_at, :converter => UnixTimestampConverter.new
       end
       
       # ISO 8601 formatted timestamps for XML friendly presentations
       define_presentation :xml do
-         maps :created_at, :converter => IsoTimestampConverter
+         maps :created_at, :converter => IsoTimestampConverter.new
       end
    end
 
