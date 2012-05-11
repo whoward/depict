@@ -18,8 +18,12 @@ module Guise
          def new_from_presentation(name, attrs)
             object = self.new
 
-            presenter = guise_presentations[name].new(object)
-            presenter.attributes = attrs
+            presenter_class = guise_presentations[name]
+
+            if presenter_class
+               presenter = presenter_class.new(object)
+               presenter.attributes = attrs
+            end
 
             object
          end
@@ -51,7 +55,11 @@ module Guise
          def to_presentation(presentation)
             presenter = self.class.guise_presentations[presentation]
 
-            presenter.new(self).to_hash
+            if presenter
+               presenter.new(self).to_hash
+            else
+               {}
+            end
          end
 
          def respond_to?(method)
