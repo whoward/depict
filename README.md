@@ -185,7 +185,7 @@ Which can be used for duck-typing and to promote DRYness:
 
 ```ruby
 
-   UserPresenter.new(User.first).to_h
-   UserPresenter.new(Customer.first).to_h
+   UserPresenter.new(User.first).to_hash
+   UserPresenter.new(Customer.first).to_hash
 
 ```
