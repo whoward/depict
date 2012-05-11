@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'time'
 
 describe Guise::Mapping do
    subject { Guise::Mapping }
@@ -22,6 +23,7 @@ describe Guise::Mapping do
    context "serialization" do
       let(:attrs) { {} }
       let(:object) { OpenStruct.new(:timestamp => Time.utc(2012, 1, 1, 0, 0, 0)) }
+      let(:serializer) { lambda {|x| x.utc.iso8601 } }
 
       it "should assign a serialized value to a given hash" do      
          subject.new(:timestamp).serialize(object, attrs)
@@ -41,11 +43,26 @@ describe Guise::Mapping do
          attrs[:created_at].should == Time.utc(2012, 1, 1, 0, 0, 0)
       end
 
+      it "should use the lamda function passed as :serialize_with" do
+         subject.new(:timestamp, :serialize_with => serializer).serialize(object, attrs)
+
+         attrs[:timestamp].should == "2012-01-01T00:00:00Z"
+      end
+
+      it "should prefer the lambda function to the converter if both are given" do
+         mapping = subject.new(:timestamp, :with => Guise::Converters::UnixTimestamp, :serialize_with => serializer)
+
+         mapping.serialize(object, attrs)
+
+         attrs[:timestamp].should == "2012-01-01T00:00:00Z"
+      end
+
    end
 
    context "deserialization" do
       let(:attrs) { {:timestamp => 1325376000000 } }
       let(:object) { OpenStruct.new }
+      let(:deserializer) { lambda {|x| Time.iso8601(x) } }
 
       it "should assign the value from the given hash" do
          subject.new(:timestamp).deserialize(object, attrs)
@@ -63,6 +80,22 @@ describe Guise::Mapping do
          subject.new(:created_at, :as => :timestamp).deserialize(object, attrs)
 
          object.created_at.should == 1325376000000
+      end
+
+      it "should use the lambda function passed as :deserialize_with" do
+         mapping = subject.new(:timestamp, :deserialize_with => deserializer)
+
+         mapping.deserialize(object, {:timestamp => "2012-01-01T00:00:00Z"})
+
+         object.timestamp.should == Time.utc(2012, 1, 1, 0, 0, 0)
+      end
+
+      it "should prefer the lambda function to the converter if both are given" do
+         mapping = subject.new(:timestamp, :with => Guise::Converters::UnixTimestamp, :deserialize_with => deserializer)
+
+         mapping.deserialize(object, {:timestamp => "2012-01-01T00:00:00Z"})
+
+         object.timestamp.should == Time.utc(2012, 1, 1, 0, 0, 0)
       end
    end
 
