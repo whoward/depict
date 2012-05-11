@@ -189,8 +189,3 @@ Which can be used for duck-typing and to promote DRYness:
    UserPresenter.new(Customer.first).to_h
 
 ```
-
-# So - what do you think?
-
-I'll probably be starting to implement this shortly, I would love some feedback before I get started, 
-feel free to contact me at the email address on my Github account.
