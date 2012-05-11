@@ -157,12 +157,12 @@ Both of which will be able to be DRYed up with a serializer/deserializer class o
       
       # UNIX timestamp representations for javascript friendly presentations
       define_presentation :javascript do
-         maps :created_at, :converter => UnixTimestampConverter.new
+         maps :created_at, :with => UnixTimestampConverter.new
       end
       
       # ISO 8601 formatted timestamps for XML friendly presentations
       define_presentation :xml do
-         maps :created_at, :converter => IsoTimestampConverter.new
+         maps :created_at, :with => IsoTimestampConverter.new
       end
    end
 

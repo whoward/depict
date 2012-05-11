@@ -14,35 +14,56 @@ describe Guise::Mapping do
    end
 
    it "should assign the :with object as the converter" do
-      conv = Guise::Converters::UnixTimestamp.new
+      mapping = subject.new(:created_at, :with => Guise::Converters::UnixTimestamp)
 
-      mapping = subject.new(:created_at, :with => conv)
-
-      mapping.converter.should == conv
-   end
-
-   it "should instantiate any class given as the :with parameter as the converter" do
-      mapping = subject.new(:id, :with => Guise::Converters::UnixTimestamp)
-
-      mapping.converter.should be_an_instance_of Guise::Converters::UnixTimestamp
+      mapping.converter.should == Guise::Converters::UnixTimestamp
    end
 
    context "serialization" do
-      let(:output) { {} }
+      let(:attrs) { {} }
       let(:object) { OpenStruct.new(:timestamp => Time.utc(2012, 1, 1, 0, 0, 0)) }
 
       it "should assign a serialized value to a given hash" do      
-         subject.new(:timestamp).serialize(object, output)
+         subject.new(:timestamp).serialize(object, attrs)
 
-         output[:timestamp].should == Time.utc(2012, 1, 1, 0, 0, 0)
+         attrs[:timestamp].should == Time.utc(2012, 1, 1, 0, 0, 0)
       end
 
       it "should assign a serialized value using the converter to a given hash" do
-         subject.new(:timestamp, :with => Guise::Converters::UnixTimestamp).serialize(object, output)
+         subject.new(:timestamp, :with => Guise::Converters::UnixTimestamp).serialize(object, attrs)
 
-         output[:timestamp].should == 1325376000000
+         attrs[:timestamp].should == 1325376000000
       end
 
+      it "should write to the :as attribute name" do
+         subject.new(:timestamp, :as => :created_at).serialize(object, attrs)
+
+         attrs[:created_at].should == Time.utc(2012, 1, 1, 0, 0, 0)
+      end
+
+   end
+
+   context "deserialization" do
+      let(:attrs) { {:timestamp => 1325376000000 } }
+      let(:object) { OpenStruct.new }
+
+      it "should assign the value from the given hash" do
+         subject.new(:timestamp).deserialize(object, attrs)
+
+         object.timestamp.should == 1325376000000
+      end
+
+      it "should assign the value using the converter from the given hash" do
+         subject.new(:timestamp, :with => Guise::Converters::UnixTimestamp).deserialize(object, attrs)
+
+         object.timestamp.should == Time.utc(2012, 1, 1, 0, 0, 0)
+      end
+
+      it "should read from the :as attribute name" do
+         subject.new(:created_at, :as => :timestamp).deserialize(object, attrs)
+
+         object.created_at.should == 1325376000000
+      end
    end
 
 end

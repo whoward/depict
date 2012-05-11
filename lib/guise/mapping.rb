@@ -3,35 +3,40 @@ module Guise
    class Mapping
       attr_reader :name
 
+      attr_reader :target_name
+
       attr_reader :converter
 
       def initialize(name, options={})
          @name = name.to_sym
 
-         self.converter = options[:with]
+         @target_name = options.fetch(:as, @name)
+
+         @converter = options[:with]
       end
 
-      def serialize(object, hash)
+      def serialize(object, attributes)
          value = object.send(name)
          
          if converter
-            hash[name] = converter.serialize(value)
+            attributes[target_name] = converter.serialize(value)
          else
-            hash[name] = value
+            attributes[target_name] = value
          end
 
          nil
       end
 
-      # def deserialize(object)
-      # end
+      def deserialize(object, attributes)
+         value = attributes[target_name]
 
-      def converter=(conv)
-         if conv == nil || !conv.is_a?(Class)
-            @converter = conv
+         if converter
+            object.send("#{name}=", converter.deserialize(value))
          else
-            @converter = conv.new
+            object.send("#{name}=", value)
          end
+
+         nil
       end
    end
 end
