@@ -1,6 +1,9 @@
 
 module Guise
    module Presentable
+      class UndefinedPresentationError < StandardError
+      end
+
       def self.included(base)
          base.send(:extend, ClassMethods)
          base.send(:include, InstanceMethods)
@@ -11,8 +14,18 @@ module Guise
             @guise_presentations ||= {}
          end
 
-         def define_presentation(name, &block)
-            guise_presentations[name] = Guise::Presenter.define(&block)
+         def define_presentation(name, options={}, &block)
+            if options[:extends]
+               extends_presenter = guise_presentations[options[:extends]]
+
+               if extends_presenter == nil
+                  raise UndefinedPresentationError.new("undefined presentation: #{options[:extends]}")
+               end
+            else
+               extends_presenter = Guise::Presenter
+            end
+
+            guise_presentations[name] = extends_presenter.define(&block)
          end
 
          def new_from_presentation(name, attrs)

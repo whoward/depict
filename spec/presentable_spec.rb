@@ -12,7 +12,7 @@ describe Guise::Presentable do
          maps :name
       end
 
-      mixed_class.send(:attr_accessor, :id, :name)
+      mixed_class.send(:attr_accessor, :id, :name, :role)
 
       mixed_class
    end
@@ -21,6 +21,7 @@ describe Guise::Presentable do
       user = user_model.new
       user.id = 42
       user.name = "foo"
+      user.role = "superuser"
       user
    end
 
@@ -41,6 +42,24 @@ describe Guise::Presentable do
          presentations.keys.should == [:user]
          presentations[:user].superclass.should == Guise::Presenter
          presentations[:user].should have(2).mappings
+      end
+
+      it "should allow defining a super presentation with :extends" do
+         user_model.define_presentation :admin, :extends => :user do
+            maps :role
+         end
+         
+         presenter = user_model.guise_presentations[:admin]
+         presenter.superclass.should == user_model.guise_presentations[:user]
+         presenter.mappings.map(&:name).should == [:id, :name, :role]
+      end
+
+      it "should raise an UndefinedPresentationError if trying to extend an undefined presentation" do
+         lambda do
+            user_model.define_presentation :admin, :extends => :fake do
+               maps :role
+            end
+         end.should raise_error(Guise::Presentable::UndefinedPresentationError)
       end
    end
 
