@@ -5,7 +5,7 @@ describe Guise::Presenter do
 
    let(:user_presenter) do
       Guise::Presenter.define do
-         maps :id
+         maps :database_id
          maps :name
          maps :email, :as => :login
       end
@@ -38,7 +38,7 @@ describe Guise::Presenter do
    end
 
    it "should add a mapping for each call to #map" do
-      user_presenter.mappings.map(&:name).should == [:id, :name, :email]
+      user_presenter.mappings.map(&:name).should == [:database_id, :name, :email]
    end
 
    it "should inherit all mappings of it's superclass without modifying them" do
@@ -46,15 +46,15 @@ describe Guise::Presenter do
          maps :role
       end
 
-      user_presenter.mappings.map(&:name).should == [:id, :name, :email]
-      admin_presenter.mappings.map(&:name).should == [:id, :name, :email, :role]
+      user_presenter.mappings.map(&:name).should == [:database_id, :name, :email]
+      admin_presenter.mappings.map(&:name).should == [:database_id, :name, :email, :role]
    end
 
    it "should be able to wrap an object and produce a hash of it's presentation" do
-      user = OpenStruct.new(:id => 42, :name => "foobar", :role => "admin")
+      user = OpenStruct.new(:database_id => 42, :name => "foobar", :role => "admin")
 
       user_presenter.new(user).to_hash.should == {
-         :id => 42,
+         :database_id => 42,
          :name => "foobar",
          :login => nil
       }
@@ -63,9 +63,9 @@ describe Guise::Presenter do
    it "should be able to wrap an object and assign attributes from a hash" do
       user = OpenStruct.new
 
-      user_presenter.new(user).attributes = {:id => 42, :name => "foobar"}
+      user_presenter.new(user).attributes = {:database_id => 42, :name => "foobar"}
 
-      user.id.should == 42
+      user.database_id.should == 42
       user.name.should == "foobar"
    end
 

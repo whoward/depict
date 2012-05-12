@@ -44,7 +44,7 @@ module Guise
          def respond_to?(method)
             names = guise_presentations.keys
 
-            if /^new_from_(#{names.join("|")})_presentation$/ =~ method
+            if /^new_from_(#{names.join("|")})_presentation$/ =~ method.to_s
                true
             else
                super(method)
@@ -54,7 +54,7 @@ module Guise
          def method_missing(method, *args)
             names = guise_presentations.keys
 
-            match = /^new_from_(#{names.join("|")})_presentation$/.match(method)
+            match = /^new_from_(#{names.join("|")})_presentation$/.match(method.to_s)
 
             if match
                new_from_presentation(match[1].to_sym, *args)
@@ -78,7 +78,7 @@ module Guise
          def respond_to?(method)
             names = self.class.guise_presentations.keys
 
-            if /^to_(#{names.join("|")})_presentation$/ =~ method
+            if /^to_(#{names.join("|")})_presentation$/ =~ method.to_s
                true
             else
                super(method)
@@ -88,7 +88,7 @@ module Guise
          def method_missing(method, *args)
             names = self.class.guise_presentations.keys
 
-            match = /^to_(#{names.join("|")})_presentation$/.match(method)
+            match = /^to_(#{names.join("|")})_presentation$/.match(method.to_s)
 
             if match
                to_presentation(match[1].to_sym)
