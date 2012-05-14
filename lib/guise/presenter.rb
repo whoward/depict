@@ -33,11 +33,11 @@ module Guise
          self.class.mappings.each {|mapping| mapping.deserialize(@object, attributes) }
       end
 
-      def respond_to?(method)
+      def respond_to?(method, include_private=false)
          if self.class.target_attribute_names.include? method
             return true
          else
-            super(method)
+            super(method, include_private)
          end
       end
 

@@ -41,13 +41,13 @@ module Guise
             object
          end
 
-         def respond_to?(method)
+         def respond_to?(method, include_private=false)
             names = guise_presentations.keys
 
             if /^new_from_(#{names.join("|")})_presentation$/ =~ method.to_s
                true
             else
-               super(method)
+               super(method, include_private)
             end
          end
 
@@ -75,13 +75,13 @@ module Guise
             end
          end
 
-         def respond_to?(method)
+         def respond_to?(method, include_private=false)
             names = self.class.guise_presentations.keys
 
             if /^to_(#{names.join("|")})_presentation$/ =~ method.to_s
                true
             else
-               super(method)
+               super(method, include_private)
             end
          end
 
