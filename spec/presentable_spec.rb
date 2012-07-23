@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Guise::Presentable do
-   subject { Guise::Presentable }
+describe Depict::Presentable do
+   subject { Depict::Presentable }
 
    let(:base_class) { Class.new }
    let(:mixed_class) { base_class.send(:include, subject); base_class }
@@ -26,21 +26,21 @@ describe Guise::Presentable do
    end
 
    context "defining presentations" do
-      it "should define #guise_presentations on the class that mixes it in" do
-         base_class.should_not respond_to :guise_presentations
+      it "should define #depict_presentations on the class that mixes it in" do
+         base_class.should_not respond_to :depict_presentations
          base_class.send(:include, subject)
-         base_class.should respond_to :guise_presentations
+         base_class.should respond_to :depict_presentations
       end
 
       it "should return an empty hash by default" do
-         mixed_class.guise_presentations.should == {}
+         mixed_class.depict_presentations.should == {}
       end
 
       it "should allow defining a presentation with #define_presentation" do
-         presentations = user_model.guise_presentations
+         presentations = user_model.depict_presentations
 
          presentations.keys.should == [:user]
-         presentations[:user].superclass.should == Guise::Presenter
+         presentations[:user].superclass.should == Depict::Presenter
          presentations[:user].should have(2).mappings
       end
 
@@ -49,8 +49,8 @@ describe Guise::Presentable do
             maps :role
          end
          
-         presenter = user_model.guise_presentations[:admin]
-         presenter.superclass.should == user_model.guise_presentations[:user]
+         presenter = user_model.depict_presentations[:admin]
+         presenter.superclass.should == user_model.depict_presentations[:user]
          presenter.mappings.map(&:name).should == [:id, :name, :role]
       end
 
@@ -59,7 +59,7 @@ describe Guise::Presentable do
             user_model.define_presentation :admin, :extends => :fake do
                maps :role
             end
-         end.should raise_error(Guise::Presentable::UndefinedPresentationError)
+         end.should raise_error(Depict::Presentable::UndefinedPresentationError)
       end
    end
 

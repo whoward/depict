@@ -1,5 +1,5 @@
 
-module Guise
+module Depict
    module Presentable
       class UndefinedPresentationError < StandardError
       end
@@ -10,28 +10,28 @@ module Guise
       end
 
       module ClassMethods
-         def guise_presentations
-            @guise_presentations ||= {}
+         def depict_presentations
+            @depict_presentations ||= {}
          end
 
          def define_presentation(name, options={}, &block)
             if options[:extends]
-               extends_presenter = guise_presentations[options[:extends]]
+               extends_presenter = depict_presentations[options[:extends]]
 
                if extends_presenter == nil
                   raise UndefinedPresentationError.new("undefined presentation: #{options[:extends]}")
                end
             else
-               extends_presenter = Guise::Presenter
+               extends_presenter = Depict::Presenter
             end
 
-            guise_presentations[name] = extends_presenter.define(&block)
+            depict_presentations[name] = extends_presenter.define(&block)
          end
 
          def new_from_presentation(name, attrs)
             object = self.new
 
-            presenter_class = guise_presentations[name]
+            presenter_class = depict_presentations[name]
 
             if presenter_class
                presenter = presenter_class.new(object)
@@ -42,7 +42,7 @@ module Guise
          end
 
          def respond_to?(method, include_private=false)
-            names = guise_presentations.keys
+            names = depict_presentations.keys
 
             if /^new_from_(#{names.join("|")})_presentation$/ =~ method.to_s
                true
@@ -52,7 +52,7 @@ module Guise
          end
 
          def method_missing(method, *args)
-            names = guise_presentations.keys
+            names = depict_presentations.keys
 
             match = /^new_from_(#{names.join("|")})_presentation$/.match(method.to_s)
 
@@ -66,7 +66,7 @@ module Guise
 
       module InstanceMethods
          def to_presentation(presentation)
-            presenter = self.class.guise_presentations[presentation]
+            presenter = self.class.depict_presentations[presentation]
 
             if presenter
                presenter.new(self).to_hash
@@ -76,7 +76,7 @@ module Guise
          end
 
          def respond_to?(method, include_private=false)
-            names = self.class.guise_presentations.keys
+            names = self.class.depict_presentations.keys
 
             if /^to_(#{names.join("|")})_presentation$/ =~ method.to_s
                true
@@ -86,7 +86,7 @@ module Guise
          end
 
          def method_missing(method, *args)
-            names = self.class.guise_presentations.keys
+            names = self.class.depict_presentations.keys
 
             match = /^to_(#{names.join("|")})_presentation$/.match(method.to_s)
 

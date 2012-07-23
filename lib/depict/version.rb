@@ -1,5 +1,5 @@
 
-module Guise
+module Depict
   module Version
      MAJOR = 0
      MINOR = 1

@@ -1,6 +1,6 @@
 # Description
 
-Guise will be a presentation library for Ruby which will let you define multiple presentations for any Ruby class using a (hopefully) pleasant DSL.  It also includes the vital missing component from other presentation libraries which will be instantiating a new instance of a class from a presentation you specify - a common use case for this would be, for example, having multiple presentations of an object to support aging versions of a Web API.
+Depict is a presentation library for Ruby which will let you define multiple presentations for any Ruby class using a (hopefully) pleasant DSL.  It also includes the vital missing component from other presentation libraries which will be instantiating a new instance of a class from a presentation you specify - a common use case for this would be, for example, having multiple presentations of an object to support aging versions of a Web API.
 
 # DSL
 
@@ -8,7 +8,7 @@ This will be how you define a presentation inline in your class:
 
 ```ruby
    class User
-      include Guise
+      include Depict
       
       # presentation for unprivileged users
       define_presentation :user do
@@ -27,7 +27,7 @@ You will also be able to define presentations outside of your class if you want 
 
 ```ruby
    class User
-      include Guise
+      include Depict
    end
    
    User.define_presentation :user do
@@ -95,7 +95,7 @@ Back to the DSL - you'll be able to specify your own custom serializers, so the 
 
 ```ruby
    class User
-      include Guise
+      include Depict
       
       # UNIX timestamp representations for javascript friendly presentations
       define_presentation :javascript do
@@ -114,7 +114,7 @@ Which has deserializer counterparts as well
 
 ```ruby
    class User
-      include Guise
+      include Depict
       
       # UNIX timestamp representations for javascript friendly presentations
       define_presentation :javascript do
@@ -153,7 +153,7 @@ Both of which will be able to be DRYed up with a serializer/deserializer class o
    end
 
    class User
-      include Guise
+      include Depict
       
       # UNIX timestamp representations for javascript friendly presentations
       define_presentation :javascript do
@@ -168,12 +168,12 @@ Both of which will be able to be DRYed up with a serializer/deserializer class o
 
 ```
 
-Internally all of this syntactic sugar is managed by the ``Guise::Presenter`` class which can be used without
+Internally all of this syntactic sugar is managed by the ``Depict::Presenter`` class which can be used without
 associating it directly with any model:
 
 ```ruby
 
-   UserPresenter = Guise::Presenter.define do
+   UserPresenter = Depict::Presenter.define do
       maps :id
       maps :name
       maps :role

@@ -1,5 +1,5 @@
 
-module Guise
+module Depict
    class Mapping
       attr_reader :name
 

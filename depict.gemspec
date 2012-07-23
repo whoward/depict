@@ -1,13 +1,13 @@
-require File.expand_path("lib/guise/version", File.dirname(__FILE__))
+require File.expand_path("lib/depict/version", File.dirname(__FILE__))
 
 Gem::Specification.new do |s|
-  s.name = %q{guise}
-  s.version = Guise::Version::STRING
+  s.name = %q{depict}
+  s.version = Depict::Version::STRING
   s.platform = Gem::Platform::RUBY
 
   s.authors = ["William Howard"]
   s.email = ["whoward.tke@gmail.com"]
-  s.homepage = %q{http://github.com/whoward/guise}
+  s.homepage = %q{http://github.com/whoward/depict}
 
   s.summary = %q{Presentation library with support for multiple bidirectional presentations}
 

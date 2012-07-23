@@ -1,5 +1,5 @@
 
-module Guise
+module Depict
    class Presenter
       class << self
          def define(&block)

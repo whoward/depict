@@ -1,4 +1,4 @@
-require File.expand_path("../lib/guise", File.dirname(__FILE__))
+require File.expand_path("../lib/depict", File.dirname(__FILE__))
 require 'ostruct'
 
 RSpec.configure do |config|

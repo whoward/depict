@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'time'
 
-describe Guise::Mapping do
-   subject { Guise::Mapping }
+describe Depict::Mapping do
+   subject { Depict::Mapping }
 
    let(:name_mapping) { subject.new(:name) }
 
@@ -15,9 +15,9 @@ describe Guise::Mapping do
    end
 
    it "should assign the :with object as the converter" do
-      mapping = subject.new(:created_at, :with => Guise::Converters::UnixTimestamp)
+      mapping = subject.new(:created_at, :with => Depict::Converters::UnixTimestamp)
 
-      mapping.converter.should == Guise::Converters::UnixTimestamp
+      mapping.converter.should == Depict::Converters::UnixTimestamp
    end
 
    context "serialization" do
@@ -32,7 +32,7 @@ describe Guise::Mapping do
       end
 
       it "should assign a serialized value using the converter to a given hash" do
-         subject.new(:timestamp, :with => Guise::Converters::UnixTimestamp).serialize(object, attrs)
+         subject.new(:timestamp, :with => Depict::Converters::UnixTimestamp).serialize(object, attrs)
 
          attrs[:timestamp].should == 1325376000000
       end
@@ -50,7 +50,7 @@ describe Guise::Mapping do
       end
 
       it "should prefer the lambda function to the converter if both are given" do
-         mapping = subject.new(:timestamp, :with => Guise::Converters::UnixTimestamp, :serialize_with => serializer)
+         mapping = subject.new(:timestamp, :with => Depict::Converters::UnixTimestamp, :serialize_with => serializer)
 
          mapping.serialize(object, attrs)
 
@@ -71,7 +71,7 @@ describe Guise::Mapping do
       end
 
       it "should assign the value using the converter from the given hash" do
-         subject.new(:timestamp, :with => Guise::Converters::UnixTimestamp).deserialize(object, attrs)
+         subject.new(:timestamp, :with => Depict::Converters::UnixTimestamp).deserialize(object, attrs)
 
          object.timestamp.should == Time.utc(2012, 1, 1, 0, 0, 0)
       end
@@ -91,7 +91,7 @@ describe Guise::Mapping do
       end
 
       it "should prefer the lambda function to the converter if both are given" do
-         mapping = subject.new(:timestamp, :with => Guise::Converters::UnixTimestamp, :deserialize_with => deserializer)
+         mapping = subject.new(:timestamp, :with => Depict::Converters::UnixTimestamp, :deserialize_with => deserializer)
 
          mapping.deserialize(object, {:timestamp => "2012-01-01T00:00:00Z"})
 

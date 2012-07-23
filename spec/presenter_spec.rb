@@ -1,10 +1,10 @@
 require 'spec_helper'
 require 'ostruct'
 
-describe Guise::Presenter do
+describe Depict::Presenter do
 
    let(:user_presenter) do
-      Guise::Presenter.define do
+      Depict::Presenter.define do
          maps :database_id
          maps :name
          maps :email, :as => :login
@@ -13,27 +13,27 @@ describe Guise::Presenter do
    
    it "should call the block given" do
       ran_block = false
-      Guise::Presenter.define { ran_block = true }
+      Depict::Presenter.define { ran_block = true }
       ran_block.should == true
    end
 
-   it "should return a class which is a subclass of Guise::Presenter" do
-      presenter = Guise::Presenter.define {}
+   it "should return a class which is a subclass of Depict::Presenter" do
+      presenter = Depict::Presenter.define {}
       presenter.should be_an_instance_of Class
-      presenter.superclass.should eql Guise::Presenter
+      presenter.superclass.should eql Depict::Presenter
    end
 
    it "should return a class which also define's the same #define method" do
-      super_presenter = Guise::Presenter.define {}
+      super_presenter = Depict::Presenter.define {}
 
       inhereted_presenter = super_presenter.define {}
 
       inhereted_presenter.superclass.should == super_presenter
-      inhereted_presenter.superclass.superclass.should == Guise::Presenter
+      inhereted_presenter.superclass.superclass.should == Depict::Presenter
    end
 
    it "should be able to access defined mappings" do
-      presenter = Guise::Presenter.define {}
+      presenter = Depict::Presenter.define {}
       presenter.mappings.should == []
    end
 
